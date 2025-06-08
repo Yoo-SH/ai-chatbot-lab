@@ -1,0 +1,211 @@
+.home-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 20px;
+  background: #212121;
+  min-height: calc(100vh - 70px);
+}
+
+.hero-section {
+  text-align: center;
+  margin-bottom: 80px;
+}
+
+.hero-section h1 {
+  font-size: 3.5rem;
+  color: #e0e0e0;
+  margin-bottom: 24px;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.hero-section p {
+  font-size: 1.3rem;
+  color: #b0b0b0;
+  margin-bottom: 50px;
+  font-weight: 400;
+}
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+  margin-top: 50px;
+}
+
+.feature-card {
+  background: #2a2a2a;
+  padding: 32px 24px;
+  border-radius: 12px;
+  border: 1px solid #404040;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.feature-card:hover {
+  background: #333333;
+  border-color: #505050;
+  transform: translateY(-4px);
+}
+
+.feature-card h3 {
+  font-size: 1.4rem;
+  margin-bottom: 16px;
+  color: #e0e0e0;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.feature-card p {
+  color: #b0b0b0;
+  line-height: 1.6;
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* ChatGPT 스타일 아이콘 */
+.feature-card h3::before {
+  content: attr(data-icon);
+  background: #10a37f;
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.feature-card:nth-child(2) h3::before {
+  background: #ff6b35;
+}
+
+.feature-card:nth-child(3) h3::before {
+  background: #5436da;
+}
+
+/* 추가 섹션 */
+.cta-section {
+  text-align: center;
+  margin-top: 80px;
+  padding: 50px 30px;
+  background: #1a1a1a;
+  border-radius: 16px;
+  border: 1px solid #2a2a2a;
+}
+
+.cta-section h2 {
+  font-size: 2.2rem;
+  color: #e0e0e0;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.cta-section p {
+  font-size: 1.1rem;
+  color: #888;
+  margin-bottom: 35px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cta-button {
+  background: #10a37f;
+  color: white;
+  padding: 16px 32px;
+  border-radius: 8px;
+  border: none;
+  font-size: 1.1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.cta-button:hover {
+  background: #0d8f6f;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(16, 163, 127, 0.3);
+}
+
+/* 인증 버튼 스타일 */
+.auth-buttons-home {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.cta-button.primary {
+  background: linear-gradient(135deg, #10a37f, #0d8f6f);
+  color: white;
+}
+
+.cta-button.primary:hover {
+  background: linear-gradient(135deg, #0d8f6f, #0a7c5a);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.cta-button.secondary {
+  background: transparent;
+  color: #e0e0e0;
+  border: 2px solid #404040;
+}
+
+.cta-button.secondary:hover {
+  background: #2a2a2a;
+  border-color: #555;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+  .home-container {
+    padding: 40px 16px;
+  }
+  
+  .hero-section h1 {
+    font-size: 2.5rem;
+  }
+  
+  .hero-section p {
+    font-size: 1.1rem;
+  }
+  
+  .features {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .feature-card {
+    padding: 24px 20px;
+  }
+  
+  .cta-section {
+    margin-top: 60px;
+    padding: 40px 20px;
+  }
+  
+  .cta-section h2 {
+    font-size: 1.8rem;
+  }
+
+  .auth-buttons-home {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .cta-button {
+    padding: 14px 28px;
+    font-size: 1rem;
+    min-width: 200px;
+  }
+} 

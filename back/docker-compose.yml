@@ -1,0 +1,75 @@
+version: '3.8'
+
+services:
+  # PostgreSQL 데이터베이스
+  postgres:
+    image: postgres:15-alpine
+    container_name: gpt-postgres
+    environment:
+      POSTGRES_DB: chatgpt_clone
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - gpt-network
+    restart: unless-stopped
+
+  # Redis 캐시
+  redis:
+    image: redis:7-alpine
+    container_name: gpt-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - gpt-network
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+
+  # Redis Commander (Redis 관리 도구)
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: gpt-redis-commander
+    environment:
+      REDIS_HOSTS: local:redis:6379
+    ports:
+      - "8081:8081"
+    networks:
+      - gpt-network
+    depends_on:
+      - redis
+    restart: unless-stopped
+
+  # pgAdmin (PostgreSQL 관리 도구)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: gpt-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8082:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - gpt-network
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+
+networks:
+  gpt-network:
+    driver: bridge 

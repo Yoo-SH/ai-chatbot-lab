@@ -1,0 +1,134 @@
+version: '3.8'
+
+services:
+  # PostgreSQL 데이터베이스
+  postgres:
+    image: postgres:15-alpine
+    container_name: chatgpt-postgres
+    environment:
+      POSTGRES_DB: gpt_clone_dev
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 3482
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db-init:/docker-entrypoint-initdb.d
+    networks:
+      - chatgpt-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis 캐시
+  redis:
+    image: redis:7-alpine
+    container_name: chatgpt-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - chatgpt-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis Commander (선택사항 - Redis 관리 도구)
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: chatgpt-redis-commander
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - "8081:8081"
+    depends_on:
+      - redis
+    networks:
+      - chatgpt-network
+
+  # FastAPI AI 서비스
+  ai-service:
+    build:
+      context: ./ai
+      dockerfile: Dockerfile
+    container_name: chatgpt-ai-service
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    ports:
+      - "8000:8000"
+    networks:
+      - chatgpt-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+  # Spring Boot 백엔드
+  backend:
+    build:
+      context: ./back/gpt
+      dockerfile: Dockerfile
+    container_name: chatgpt-backend
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/gpt_clone_dev
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=3482
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
+      - JWT_SECRET=mySecretKey123456789012345678901234567890
+      - AI_SERVICE_BASE_URL=http://ai-service:8000
+      - AI_SERVICE_TIMEOUT=30
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      ai-service:
+        condition: service_healthy
+    networks:
+      - chatgpt-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  # React 프론트엔드
+  frontend:
+    build:
+      context: ./front
+      dockerfile: Dockerfile
+    container_name: chatgpt-frontend
+    environment:
+      - REACT_APP_API_URL=http://localhost:8080
+      - REACT_APP_WS_URL=ws://localhost:8080
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - chatgpt-network
+    volumes:
+      - ./front:/app
+      - /app/node_modules
+
+networks:
+  chatgpt-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local 

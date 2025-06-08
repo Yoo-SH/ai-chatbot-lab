@@ -1,0 +1,45 @@
+spring:
+    profiles:
+        active: dev
+    datasource:
+        url: jdbc:postgresql://localhost:5432/gpt_clone_dev
+        username: postgres
+        password: 3482
+        driver-class-name: org.postgresql.Driver
+
+    application:
+            name: gpt_clone
+
+    # Redis 설정 추가
+    data:
+        redis:
+            host: localhost
+            port: 6379
+            database: 0
+            timeout: 2000ms
+            lettuce:
+                pool:
+                    max-active: 8
+                    max-idle: 8
+                    min-idle: 0
+    
+    jpa:
+        database: POSTGRESQL
+        hibernate:
+            ddl-auto: update
+        show-sql: true
+        properties:
+            hibernate:
+                format_sql: true
+
+# JWT 설정 추가
+jwt:
+    secret: mySecretKey123456789012345678901234567890
+    expiration: 86400000 # 24시간 (밀리초)
+    refresh-expiration: 604800000 # 7일 (밀리초)
+
+# AI 서비스 설정
+ai:
+    service:
+        base-url: http://localhost:8000
+        timeout: 30
