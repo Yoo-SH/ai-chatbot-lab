@@ -1,0 +1,18 @@
+{
+    "appId": "com.chatgpt.clone",
+    "appName": "ChatGPT Clone",
+    "webDir": "build",
+    "bundledWebRuntime": false,
+    "server": {
+      "androidScheme": "https",
+      "cleartext": true
+    },
+    "plugins": {
+      "SplashScreen": {
+        "launchShowDuration": 2000,
+        "backgroundColor": "#ffffff",
+        "androidSplashResourceName": "splash",
+        "androidScaleType": "CENTER_CROP"
+      }
+    }
+  }
