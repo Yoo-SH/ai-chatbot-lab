@@ -8,9 +8,9 @@ OpenAI GPT API 메인 실행 파일
 import os
 import sys
 import logging
-from openai_service import OpenAIService
-from chatbot import ChatBot, AdvancedChatBot
-from examples import (
+from ai.ai_api import OpenAIService
+from ai.ai_cli import (
+    ChatBot, AdvancedChatBot,
     example_basic_chat, example_streaming_chat, example_custom_prompt,
     example_different_models, example_temperature_variations,
     example_conversation_management, example_title_generation,
