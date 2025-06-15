@@ -4,9 +4,9 @@ OpenAI GPT API 패키지
 """
 
 # 핵심 클래스들을 패키지 레벨에서 직접 import 가능하게 설정
-from .openai_service import OpenAIService
-from .chatbot import ChatBot, AdvancedChatBot
-from .examples import *
+from .ai_api.openai_service import OpenAIService
+from .ai_cli.chatbot import ChatBot, AdvancedChatBot
+from .ai_cli.examples import *
 
 # 패키지 정보
 __version__ = "1.0.0"
