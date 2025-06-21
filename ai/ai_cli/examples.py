@@ -7,6 +7,7 @@ OpenAI GPT API 사용 예제들
 """
 
 from ai.ai_api.openai_service import OpenAIService
+from ai.prompt import GENERAL_CHAT_PROMPT, CODE_ASSISTANT_PROMPT
 import time
 import asyncio
 from typing import List
@@ -23,13 +24,13 @@ def example_basic_chat():
         
         # 간단한 대화
         print("👤 사용자: 안녕하세요! 파이썬에 대해 간단히 설명해주세요.")
-        response = ai_service.chat("안녕하세요! 파이썬에 대해 간단히 설명해주세요.")
+        response = ai_service.chat("안녕하세요! 파이썬에 대해 간단히 설명해주세요.", system_prompt=GENERAL_CHAT_PROMPT)
         print(f"🤖 AI: {response}")
         print()
         
         # 후속 대화 (이전 대화 기록 포함)
         print("👤 사용자: 파이썬의 주요 특징 3가지만 알려주세요.")
-        response = ai_service.chat("파이썬의 주요 특징 3가지만 알려주세요.")
+        response = ai_service.chat("파이썬의 주요 특징 3가지만 알려주세요.", system_prompt=GENERAL_CHAT_PROMPT)
         print(f"🤖 AI: {response}")
         
     except Exception as e:
@@ -48,7 +49,7 @@ def example_streaming_chat():
         print("🤖 AI: ", end="", flush=True)
         
         # 스트리밍으로 응답 받기
-        for chunk in ai_service.chat_stream("머신러닝과 딥러닝의 차이점을 자세히 설명해주세요."):
+        for chunk in ai_service.chat_stream("머신러닝과 딥러닝의 차이점을 자세히 설명해주세요.", system_prompt=GENERAL_CHAT_PROMPT):
             print(chunk, end="", flush=True)
             time.sleep(0.05)  # 타이핑 효과
         print()
@@ -117,7 +118,7 @@ def example_different_models():
         
         # GPT-3.5 사용
         print("🤖 GPT-3.5 응답:")
-        response_35 = ai_service.chat(question, model="gpt-3.5-turbo")
+        response_35 = ai_service.chat(question, model="gpt-3.5-turbo", system_prompt=GENERAL_CHAT_PROMPT)
         print(response_35)
         print()
         
@@ -127,7 +128,7 @@ def example_different_models():
         # GPT-4 사용 (API 키에 GPT-4 권한이 있을 때만)
         print("🤖 GPT-4 응답:")
         try:
-            response_4 = ai_service.chat(question, model="gpt-4")
+            response_4 = ai_service.chat(question, model="gpt-4", system_prompt=GENERAL_CHAT_PROMPT)
             print(response_4)
         except Exception as e:
             print(f"GPT-4 사용 불가: {str(e)}")
@@ -154,7 +155,7 @@ def example_temperature_variations():
         
         for temp, label in zip(temperatures, labels):
             print(f"🎨 {label}:")
-            response = ai_service.chat(question, temperature=temp)
+            response = ai_service.chat(question, temperature=temp, system_prompt=GENERAL_CHAT_PROMPT)
             print(response)
             print()
             
@@ -184,7 +185,7 @@ def example_conversation_management():
         print("📝 대화 시뮬레이션:")
         for msg in messages:
             print(f"👤 사용자: {msg}")
-            response = ai_service.chat(msg)
+            response = ai_service.chat(msg, system_prompt=GENERAL_CHAT_PROMPT)
             print(f"🤖 AI: {response[:100]}..." if len(response) > 100 else f"🤖 AI: {response}")
             print()
         
@@ -227,9 +228,9 @@ def example_title_generation():
         ai_service = OpenAIService()
         
         # 대화 시작
-        ai_service.chat("안녕하세요! 파이썬 데이터 분석에 대해 궁금합니다.")
-        ai_service.chat("pandas 라이브러리의 주요 기능을 알려주세요.")
-        ai_service.chat("데이터 시각화는 어떻게 하나요?")
+        ai_service.chat("안녕하세요! 파이썬 데이터 분석에 대해 궁금합니다.", system_prompt=GENERAL_CHAT_PROMPT)
+        ai_service.chat("pandas 라이브러리의 주요 기능을 알려주세요.", system_prompt=GENERAL_CHAT_PROMPT)
+        ai_service.chat("데이터 시각화는 어떻게 하나요?", system_prompt=GENERAL_CHAT_PROMPT)
         
         # 첫 번째 메시지를 미리보기로 사용
         preview = ai_service.get_conversation_history()[0]["content"]
@@ -250,11 +251,7 @@ def example_code_assistant():
         ai_service = OpenAIService()
         
         # 코딩 전문가 프롬프트
-        coding_prompt = """
-        당신은 숙련된 파이썬 개발자입니다.
-        코드 예제를 제공할 때는 주석을 포함하여 설명하고,
-        best practice를 따르는 깔끔한 코드를 작성합니다.
-        """
+        coding_prompt = CODE_ASSISTANT_PROMPT
         
         questions = [
             "파이썬으로 간단한 계산기 클래스를 만들어주세요.",

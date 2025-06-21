@@ -7,6 +7,7 @@
 
 from typing import Optional
 from ai.ai_api.openai_service import OpenAIService
+from ai.prompt import GENERAL_CHAT_PROMPT
 import logging
 
 logger = logging.getLogger(__name__)
@@ -225,7 +226,7 @@ class AdvancedChatBot(ChatBot):
     
     def __init__(self, api_key: Optional[str] = None):
         super().__init__(api_key)
-        self.system_prompt = None
+        self.system_prompt = GENERAL_CHAT_PROMPT
         self.current_model = None
         self.current_temperature = None
     
