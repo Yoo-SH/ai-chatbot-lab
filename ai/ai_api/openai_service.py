@@ -12,6 +12,7 @@ from typing import List, Dict, Optional
 from datetime import datetime
 from openai import OpenAI
 import logging
+from ..prompt import GENERAL_CHAT_CONFIG, CONVERSATION_TITLE_CONFIG
 
 # .env 파일 자동 로드
 try:
@@ -40,10 +41,10 @@ class OpenAIService:
         self.client = OpenAI(api_key=self.api_key)
         self.conversation_history: List[Dict[str, str, str]] = [] # 예시, self.conversation_history = [   {"role": "user", "content": "안녕하세요?", timestamp = "2023-01-01T12:00:00"} ]
         
-        # 기본 설정 (환경변수에서 가져오거나 기본값 사용)
+        # 기본 설정 (환경변수에서 가져오거나 GENERAL_CHAT_CONFIG 사용)
         self.default_model = os.getenv('DEFAULT_MODEL', "gpt-3.5-turbo")
-        self.default_max_tokens = int(os.getenv('DEFAULT_MAX_TOKENS', "2000")) # **토큰(Token)**은 자연어 처리에서 텍스트를 구성하는 최소 단위입니다. 단어, 구두점, 공백 등이 토큰으로 간주될 수 있습니다. ex) "Hello, world!"는 약 3개의 토큰으로 간주.
-        self.default_temperature = float(os.getenv('DEFAULT_TEMPERATURE', "0.7")) # 모델의 창의성 정도, 값이 낮을수록 모델이 더 결정적이고 예측 가능한 응답 생성
+        self.default_max_tokens = int(os.getenv('DEFAULT_MAX_TOKENS', str(GENERAL_CHAT_CONFIG["max_tokens"]))) # **토큰(Token)**은 자연어 처리에서 텍스트를 구성하는 최소 단위입니다. 단어, 구두점, 공백 등이 토큰으로 간주될 수 있습니다. ex) "Hello, world!"는 약 3개의 토큰으로 간주.
+        self.default_temperature = float(os.getenv('DEFAULT_TEMPERATURE', str(GENERAL_CHAT_CONFIG["temperature"]))) # 모델의 창의성 정도, 값이 낮을수록 모델이 더 결정적이고 예측 가능한 응답 생성
         
     def add_message(self, role: str, content: str):
         """대화 기록에 메시지 추가"""
@@ -192,11 +193,11 @@ class OpenAIService:
             response = self.client.chat.completions.create(
                 model="gpt-3.5-turbo",
                 messages=[
-                    {"role": "system", "content": "다음 대화 내용을 바탕으로 간단하고 명확한 제목을 생성해주세요. 10글자 이내로 작성하세요."},
+                    {"role": "system", "content": CONVERSATION_TITLE_CONFIG["prompt"]},
                     {"role": "user", "content": conversation_preview}
                 ],
-                max_tokens=30, 
-                temperature=0.2
+                max_tokens=CONVERSATION_TITLE_CONFIG["max_tokens"], 
+                temperature=CONVERSATION_TITLE_CONFIG["temperature"]
             )
             
             return response.choices[0].message.content.strip()

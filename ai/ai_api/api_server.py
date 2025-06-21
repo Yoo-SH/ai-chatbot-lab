@@ -15,7 +15,7 @@ import logging
 from datetime import datetime
 
 from .openai_service import OpenAIService
-from ..prompt import GENERAL_CHAT_PROMPT
+from ..prompt import GENERAL_CHAT_CONFIG, get_config
 
 # 로깅 설정
 logging.basicConfig(level=logging.INFO)
@@ -45,10 +45,10 @@ streaming_sessions: Dict[str, Dict[str, Any]] = {}
 class ChatRequest(BaseModel):
     message: str
     conversation_history: Optional[List[Dict[str, str]]] = []
-    system_prompt: Optional[str] = GENERAL_CHAT_PROMPT
+    system_prompt: Optional[str] = GENERAL_CHAT_CONFIG["prompt"]
     model: Optional[str] = "gpt-3.5-turbo"
-    temperature: Optional[float] = 0.7
-    max_tokens: Optional[int] = 1000
+    temperature: Optional[float] = GENERAL_CHAT_CONFIG["temperature"]
+    max_tokens: Optional[int] = GENERAL_CHAT_CONFIG["max_tokens"]
     stream: Optional[bool] = False
 
 class ChatResponse(BaseModel):
@@ -60,10 +60,10 @@ class ChatResponse(BaseModel):
 class StreamingChatRequest(BaseModel):
     message: str
     conversation_history: Optional[List[Dict[str, str]]] = []
-    system_prompt: Optional[str] = GENERAL_CHAT_PROMPT
+    system_prompt: Optional[str] = GENERAL_CHAT_CONFIG["prompt"]
     model: Optional[str] = "gpt-3.5-turbo"
-    temperature: Optional[float] = 0.7
-    max_tokens: Optional[int] = 1000
+    temperature: Optional[float] = GENERAL_CHAT_CONFIG["temperature"]
+    max_tokens: Optional[int] = GENERAL_CHAT_CONFIG["max_tokens"]
 
 class StreamingStartResponse(BaseModel):
     stream_id: str
