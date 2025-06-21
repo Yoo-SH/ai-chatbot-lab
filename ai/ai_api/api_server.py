@@ -15,6 +15,7 @@ import logging
 from datetime import datetime
 
 from .openai_service import OpenAIService
+from ..prompt import GENERAL_CHAT_PROMPT
 
 # 로깅 설정
 logging.basicConfig(level=logging.INFO)
@@ -44,7 +45,7 @@ streaming_sessions: Dict[str, Dict[str, Any]] = {}
 class ChatRequest(BaseModel):
     message: str
     conversation_history: Optional[List[Dict[str, str]]] = []
-    system_prompt: Optional[str] = "당신은 도움이 되는 AI 어시스턴트입니다."
+    system_prompt: Optional[str] = GENERAL_CHAT_PROMPT
     model: Optional[str] = "gpt-3.5-turbo"
     temperature: Optional[float] = 0.7
     max_tokens: Optional[int] = 1000
@@ -59,7 +60,7 @@ class ChatResponse(BaseModel):
 class StreamingChatRequest(BaseModel):
     message: str
     conversation_history: Optional[List[Dict[str, str]]] = []
-    system_prompt: Optional[str] = "당신은 도움이 되는 AI 어시스턴트입니다."
+    system_prompt: Optional[str] = GENERAL_CHAT_PROMPT
     model: Optional[str] = "gpt-3.5-turbo"
     temperature: Optional[float] = 0.7
     max_tokens: Optional[int] = 1000
