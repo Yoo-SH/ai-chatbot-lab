@@ -7,7 +7,7 @@
 
 from typing import Optional
 from ai.ai_api.openai_service import OpenAIService
-from ai.prompt import GENERAL_CHAT_PROMPT
+from ai.prompt import GENERAL_CHAT_CONFIG, get_config
 import logging
 
 logger = logging.getLogger(__name__)
@@ -226,9 +226,10 @@ class AdvancedChatBot(ChatBot):
     
     def __init__(self, api_key: Optional[str] = None):
         super().__init__(api_key)
-        self.system_prompt = GENERAL_CHAT_PROMPT
+        self.system_prompt = GENERAL_CHAT_CONFIG["prompt"]
         self.current_model = None
-        self.current_temperature = None
+        self.current_temperature = GENERAL_CHAT_CONFIG["temperature"]
+        self.current_max_tokens = GENERAL_CHAT_CONFIG["max_tokens"]
     
     def start_chat(self):
         """고급 설정이 포함된 채팅 시작"""
@@ -240,8 +241,9 @@ class AdvancedChatBot(ChatBot):
         print("🚀 OpenAI 고급 챗봇에 오신 것을 환영합니다!")
         print("💡 추가 기능:")
         print("  • set-prompt <프롬프트>: 시스템 프롬프트 설정")
-        print("  • set-model <모델명>: AI 모델 변경")
+        print("  • set-model <모델명>: AI 모델 변경")  
         print("  • set-temp <0.0-1.0>: 창의성 수준 조정")
+        print("  • set-tokens <1-4000>: 최대 토큰 수 설정")
         print("  • show-settings: 현재 설정 확인")
         print()
     
@@ -281,6 +283,19 @@ class AdvancedChatBot(ChatBot):
                 print("❌ 올바른 숫자를 입력해주세요.")
             return True
         
+        # 최대 토큰 설정
+        elif command.startswith('set-tokens '):
+            try:
+                tokens = int(command[11:].strip())
+                if 1 <= tokens <= 4000:
+                    self.current_max_tokens = tokens
+                    print(f"🎯 최대 토큰 설정: {tokens}")
+                else:
+                    print("❌ 토큰은 1~4000 사이의 값이어야 합니다.")
+            except ValueError:
+                print("❌ 올바른 숫자를 입력해주세요.")
+            return True
+        
         # 현재 설정 확인
         elif command == 'show-settings':
             self._show_current_settings()
@@ -299,6 +314,7 @@ class AdvancedChatBot(ChatBot):
                 user_input,
                 model=self.current_model,
                 temperature=self.current_temperature,
+                max_tokens=self.current_max_tokens,
                 system_prompt=self.system_prompt
             ):
                 print(chunk, end="", flush=True)
@@ -311,4 +327,5 @@ class AdvancedChatBot(ChatBot):
         print("⚙️ 현재 설정:")
         print(f"  • 모델: {self.current_model or self.ai_service.default_model}")
         print(f"  • 창의성: {self.current_temperature or self.ai_service.default_temperature}")
+        print(f"  • 최대 토큰: {self.current_max_tokens or self.ai_service.default_max_tokens}")
         print(f"  • 시스템 프롬프트: {self.system_prompt[:50] + '...' if self.system_prompt and len(self.system_prompt) > 50 else self.system_prompt or '설정되지 않음'}") 

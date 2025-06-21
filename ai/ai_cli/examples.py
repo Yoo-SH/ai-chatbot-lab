@@ -7,7 +7,7 @@ OpenAI GPT API 사용 예제들
 """
 
 from ai.ai_api.openai_service import OpenAIService
-from ai.prompt import GENERAL_CHAT_PROMPT, CODE_ASSISTANT_PROMPT
+from ai.prompt import get_config, get_prompt, get_temperature, get_max_tokens
 import time
 import asyncio
 from typing import List
@@ -22,15 +22,28 @@ def example_basic_chat():
         # OpenAI 서비스 초기화
         ai_service = OpenAIService()
         
+        # 일반 채팅 설정 가져오기
+        config = get_config("general_chat")
+        
         # 간단한 대화
         print("👤 사용자: 안녕하세요! 파이썬에 대해 간단히 설명해주세요.")
-        response = ai_service.chat("안녕하세요! 파이썬에 대해 간단히 설명해주세요.", system_prompt=GENERAL_CHAT_PROMPT)
+        response = ai_service.chat(
+            "안녕하세요! 파이썬에 대해 간단히 설명해주세요.", 
+            system_prompt=config["prompt"],
+            temperature=config["temperature"],
+            max_tokens=config["max_tokens"]
+        )
         print(f"🤖 AI: {response}")
         print()
         
         # 후속 대화 (이전 대화 기록 포함)
         print("👤 사용자: 파이썬의 주요 특징 3가지만 알려주세요.")
-        response = ai_service.chat("파이썬의 주요 특징 3가지만 알려주세요.", system_prompt=GENERAL_CHAT_PROMPT)
+        response = ai_service.chat(
+            "파이썬의 주요 특징 3가지만 알려주세요.", 
+            system_prompt=config["prompt"],
+            temperature=config["temperature"],
+            max_tokens=config["max_tokens"]
+        )
         print(f"🤖 AI: {response}")
         
     except Exception as e:
@@ -45,11 +58,19 @@ def example_streaming_chat():
     try:
         ai_service = OpenAIService()
         
+        # 일반 채팅 설정 가져오기
+        config = get_config("general_chat")
+        
         print("👤 사용자: 머신러닝과 딥러닝의 차이점을 자세히 설명해주세요.")
         print("🤖 AI: ", end="", flush=True)
         
         # 스트리밍으로 응답 받기
-        for chunk in ai_service.chat_stream("머신러닝과 딥러닝의 차이점을 자세히 설명해주세요.", system_prompt=GENERAL_CHAT_PROMPT):
+        for chunk in ai_service.chat_stream(
+            "머신러닝과 딥러닝의 차이점을 자세히 설명해주세요.", 
+            system_prompt=config["prompt"],
+            temperature=config["temperature"],
+            max_tokens=config["max_tokens"]
+        ):
             print(chunk, end="", flush=True)
             time.sleep(0.05)  # 타이핑 효과
         print()
@@ -116,9 +137,18 @@ def example_different_models():
         print("👤 사용자:", question)
         print()
         
+        # 일반 채팅 설정 가져오기
+        config = get_config("general_chat")
+        
         # GPT-3.5 사용
         print("🤖 GPT-3.5 응답:")
-        response_35 = ai_service.chat(question, model="gpt-3.5-turbo", system_prompt=GENERAL_CHAT_PROMPT)
+        response_35 = ai_service.chat(
+            question, 
+            model="gpt-3.5-turbo", 
+            system_prompt=config["prompt"],
+            temperature=config["temperature"],
+            max_tokens=config["max_tokens"]
+        )
         print(response_35)
         print()
         
@@ -128,7 +158,13 @@ def example_different_models():
         # GPT-4 사용 (API 키에 GPT-4 권한이 있을 때만)
         print("🤖 GPT-4 응답:")
         try:
-            response_4 = ai_service.chat(question, model="gpt-4", system_prompt=GENERAL_CHAT_PROMPT)
+            response_4 = ai_service.chat(
+                question, 
+                model="gpt-4", 
+                system_prompt=config["prompt"],
+                temperature=config["temperature"],
+                max_tokens=config["max_tokens"]
+            )
             print(response_4)
         except Exception as e:
             print(f"GPT-4 사용 불가: {str(e)}")
@@ -153,9 +189,17 @@ def example_temperature_variations():
         temperatures = [0.2, 0.7, 1.0]
         labels = ["보수적 (0.2)", "균형적 (0.7)", "창의적 (1.0)"]
         
+        # 일반 채팅 설정 가져오기 (프롬프트와 max_tokens는 동일하게, temperature만 변경)
+        config = get_config("general_chat")
+        
         for temp, label in zip(temperatures, labels):
             print(f"🎨 {label}:")
-            response = ai_service.chat(question, temperature=temp, system_prompt=GENERAL_CHAT_PROMPT)
+            response = ai_service.chat(
+                question, 
+                temperature=temp, 
+                system_prompt=config["prompt"],
+                max_tokens=config["max_tokens"]
+            )
             print(response)
             print()
             
@@ -182,10 +226,18 @@ def example_conversation_management():
             "웹 개발도 가능한가요?"
         ]
         
+        # 일반 채팅 설정 가져오기
+        config = get_config("general_chat")
+        
         print("📝 대화 시뮬레이션:")
         for msg in messages:
             print(f"👤 사용자: {msg}")
-            response = ai_service.chat(msg, system_prompt=GENERAL_CHAT_PROMPT)
+            response = ai_service.chat(
+                msg, 
+                system_prompt=config["prompt"],
+                temperature=config["temperature"],
+                max_tokens=config["max_tokens"]
+            )
             print(f"🤖 AI: {response[:100]}..." if len(response) > 100 else f"🤖 AI: {response}")
             print()
         
@@ -227,10 +279,28 @@ def example_title_generation():
     try:
         ai_service = OpenAIService()
         
+        # 일반 채팅 설정 가져오기
+        config = get_config("general_chat")
+        
         # 대화 시작
-        ai_service.chat("안녕하세요! 파이썬 데이터 분석에 대해 궁금합니다.", system_prompt=GENERAL_CHAT_PROMPT)
-        ai_service.chat("pandas 라이브러리의 주요 기능을 알려주세요.", system_prompt=GENERAL_CHAT_PROMPT)
-        ai_service.chat("데이터 시각화는 어떻게 하나요?", system_prompt=GENERAL_CHAT_PROMPT)
+        ai_service.chat(
+            "안녕하세요! 파이썬 데이터 분석에 대해 궁금합니다.", 
+            system_prompt=config["prompt"],
+            temperature=config["temperature"],
+            max_tokens=config["max_tokens"]
+        )
+        ai_service.chat(
+            "pandas 라이브러리의 주요 기능을 알려주세요.", 
+            system_prompt=config["prompt"],
+            temperature=config["temperature"],
+            max_tokens=config["max_tokens"]
+        )
+        ai_service.chat(
+            "데이터 시각화는 어떻게 하나요?", 
+            system_prompt=config["prompt"],
+            temperature=config["temperature"],
+            max_tokens=config["max_tokens"]
+        )
         
         # 첫 번째 메시지를 미리보기로 사용
         preview = ai_service.get_conversation_history()[0]["content"]
@@ -250,8 +320,8 @@ def example_code_assistant():
     try:
         ai_service = OpenAIService()
         
-        # 코딩 전문가 프롬프트
-        coding_prompt = CODE_ASSISTANT_PROMPT
+        # 코드 어시스턴트 설정 가져오기
+        coding_config = get_config("code_assistant")
         
         questions = [
             "파이썬으로 간단한 계산기 클래스를 만들어주세요.",
@@ -261,7 +331,12 @@ def example_code_assistant():
         
         for question in questions:
             print(f"👤 사용자: {question}")
-            response = ai_service.chat(question, system_prompt=coding_prompt)
+            response = ai_service.chat(
+                question, 
+                system_prompt=coding_config["prompt"],
+                temperature=coding_config["temperature"],
+                max_tokens=coding_config["max_tokens"]
+            )
             print(f"🤖 AI: {response}")
             print("-" * 50)
         
