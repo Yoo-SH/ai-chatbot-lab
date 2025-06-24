@@ -105,6 +105,7 @@ __사용자 전용 프롬프트 추가__<br>
 
 ## 🏗️ 시스템 아키텍처
 
+```mermaid
 graph LR
     subgraph "🧠 GPT 클론코딩 연동 시스템 구성도"
         FE[💻 Frontend - React]:::frontend
@@ -124,7 +125,7 @@ graph LR
     classDef ai fill:#ffa726,stroke:#ef6c00,stroke-width:2px,color:#fff;
     classDef gpt fill:#e57373,stroke:#c62828,stroke-width:2px,color:#fff;
     classDef db fill:#9575cd,stroke:#512da8,stroke-width:2px,color:#fff;
-
+```
 
 ## 🚀 빠른 시작
 
