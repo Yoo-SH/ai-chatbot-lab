@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Sidebar.css';
 
-const Sidebar = ({ onNewChat, onSelectChat, selectedChatId, onClearEmptyConversation }) => {
+const Sidebar = ({ onNewChat, onSelectChat, selectedChatId, onClearEmptyConversation, onRefreshHistory }) => {
   const [chatHistory, setChatHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -169,7 +169,7 @@ const Sidebar = ({ onNewChat, onSelectChat, selectedChatId, onClearEmptyConversa
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          title: '새 채팅'
+          title: '새 대화'
         })
       });
 
@@ -221,6 +221,13 @@ const Sidebar = ({ onNewChat, onSelectChat, selectedChatId, onClearEmptyConversa
       onClearEmptyConversation(clearEmptyConversation);
     }
   }, [onClearEmptyConversation, emptyConversationId]);
+
+  // Chat 컴포넌트에 채팅 기록 새로고침 함수 제공
+  useEffect(() => {
+    if (onRefreshHistory) {
+      onRefreshHistory(fetchChatHistory);
+    }
+  }, [onRefreshHistory]);
 
   // 컴포넌트 마운트 시 채팅 기록 로드
   useEffect(() => {
