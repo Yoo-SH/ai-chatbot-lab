@@ -8,45 +8,45 @@ React, Spring Boot, FastAPI로 구현한 ChatGPT 클론 애플리케이션입니
 
 ## `🛠️ 기술 스택`
 
-### Frontend (React)
-- **React 18** (Hooks, Functional Components)
-- **React Router DOM** (SPA 라우팅)
-- **Modern CSS3** (Flexbox, Grid, Animations)
-- **ES6+ JavaScript** (Async/Await, Modules)
-- **Fetch API** (HTTP 통신)
+### 🖥️ Frontend (React)
+![React](https://img.shields.io/badge/React-18-blue?logo=react)
+![React Router](https://img.shields.io/badge/React_Router_DOM-SPA_Routing-orange?logo=react-router)
+![CSS3](https://img.shields.io/badge/CSS3-Flexbox_&_Grid-blueviolet?logo=css3)
+![JavaScript](https://img.shields.io/badge/ES6+-JavaScript-yellow?logo=javascript)
+![Fetch API](https://img.shields.io/badge/Fetch_API-HTTP_통신-lightgrey)
 
-### Backend (Spring Boot)
-- **Spring Boot 3.5** (REST API)
-- **Spring Security** (JWT 인증)
-- **Spring Data JPA** (ORM)
-- **PostgreSQL** (메인 데이터베이스)
-- **Redis** (캐싱 & 세션 관리)
-- **Gradle** (의존성 관리)
+### ⚙️ Backend (Spring Boot)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.5-success?logo=springboot)
+![Spring Security](https://img.shields.io/badge/Spring_Security-JWT_인증-green?logo=springsecurity)
+![JPA](https://img.shields.io/badge/Spring_Data_JPA-ORM-blue?logo=hibernate)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-메인_DB-336791?logo=postgresql)
+![Gradle](https://img.shields.io/badge/Gradle-의존성_관리-02303A?logo=gradle)
 
-### AI Service (FastAPI)
-- **FastAPI** (Python 웹 프레임워크)
-- **OpenAI GPT-4 API** (AI 대화)
-- **Server-Sent Events** (실시간 스트리밍)
-- **지능형 프롬프트 시스템** (CONFIG 기반 중앙 관리)
-- **최적화된 AI 매개변수** (용도별 temperature, max_tokens 조정)
-- **Pydantic** (데이터 검증)
-- **Uvicorn** (ASGI 서버)
+### 🤖 AI Service (FastAPI)
+![FastAPI](https://img.shields.io/badge/FastAPI-Python_Framework-009688?logo=fastapi)
+![OpenAI](https://img.shields.io/badge/GPT--4-OpenAI_API-black?logo=openai)
+![SSE](https://img.shields.io/badge/Server--Sent_Events-스트리밍-FF8800)
+![Prompt System](https://img.shields.io/badge/지능형_프롬프트-Config_기반_관리-6A1B9A)
+![AI Params](https://img.shields.io/badge/AI_매개변수-최적화-green)
+![Pydantic](https://img.shields.io/badge/Pydantic-데이터_검증-blue?logo=pydantic)
+![Uvicorn](https://img.shields.io/badge/Uvicorn-ASGI_Server-4B8BBE)
 
-### Redis
-- **Redis** (캐싱 & 세션 관리)
-- **Refresh Token** (JWT 토큰 갱신)
+### 🔁 Redis
+![Redis](https://img.shields.io/badge/Redis-캐싱_&_세션-DC382D?logo=redis)
+![Refresh Token](https://img.shields.io/badge/Refresh_Token-JWT_갱신-blue)
 
-### Redis Commander
-- **Redis Commander** (Redis 관리 도구)
+### 🛠️ Redis Commander
+![Redis Commander](https://img.shields.io/badge/Redis_Commander-관리_UI-orange)
 
-### PostgreSQL
-- **PostgreSQL** (메인 데이터베이스)
+### 🗃️ PostgreSQL
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-메인_DB-336791?logo=postgresql)
 
-### Docker & Docker Compose
-- **Docker & Docker Compose** (컨테이너화)
+### 🐳 Docker & Docker Compose
+![Docker](https://img.shields.io/badge/Docker-컨테이너화-2496ED?logo=docker)
+![Docker Compose](https://img.shields.io/badge/Docker_Compose-멀티_컨테이너-blue)
 
-### Nginx
-- **Nginx** (리버스 프록시)
+### 🌐 Nginx
+![Nginx](https://img.shields.io/badge/Nginx-리버스_프록시-009639?logo=nginx)
 
 
 ## `설치 및 실행 방법`
@@ -125,7 +125,7 @@ graph LR
     classDef ai fill:#ffa726,stroke:#ef6c00,stroke-width:2px,color:#fff;
     classDef gpt fill:#e57373,stroke:#c62828,stroke-width:2px,color:#fff;
     classDef db fill:#9575cd,stroke:#512da8,stroke-width:2px,color:#fff;
-```
+
 
 ## 🚀 빠른 시작
 
