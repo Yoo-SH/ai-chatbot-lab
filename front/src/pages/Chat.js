@@ -26,6 +26,8 @@ const Chat = () => {
   
   // Sidebar에서 빈 채팅 상태를 해제하는 함수를 저장
   const clearEmptyConversationRef = useRef(null);
+  // Sidebar의 채팅 기록을 새로고침하는 함수를 저장
+  const refreshHistoryRef = useRef(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -132,6 +134,11 @@ const Chat = () => {
         
         await conversationService.updateConversation(currentConversationId, newTitle);
         setConversationTitle(newTitle);
+        
+        // 사이드바 채팅 기록 새로고침
+        if (refreshHistoryRef.current) {
+          refreshHistoryRef.current();
+        }
       } catch (error) {
         console.error('제목 업데이트 실패:', error);
       }
@@ -293,6 +300,9 @@ const Chat = () => {
         selectedChatId={currentConversationId}
         onClearEmptyConversation={(clearFunction) => {
           clearEmptyConversationRef.current = clearFunction;
+        }}
+        onRefreshHistory={(refreshFunction) => {
+          refreshHistoryRef.current = refreshFunction;
         }}
       />
       {showPromptSelector && (
