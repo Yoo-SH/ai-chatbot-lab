@@ -147,8 +147,8 @@ const About = () => {
           </p>
           <div className="stats">
             <div className="stat-item">
-              <span className="stat-number">100%</span>
-              <span className="stat-label">ChatGPT UI 재현도</span>
+              <span className="stat-number">Ui</span>
+              <span className="stat-label">ChatGPT 디자인 클론</span>
             </div>
             <div className="stat-item">
               <span className="stat-number">15+</span>
