@@ -125,7 +125,7 @@ graph LR
     classDef ai fill:#ffa726,stroke:#ef6c00,stroke-width:2px,color:#fff;
     classDef gpt fill:#e57373,stroke:#c62828,stroke-width:2px,color:#fff;
     classDef db fill:#9575cd,stroke:#512da8,stroke-width:2px,color:#fff;
-
+```
 
 ## 🚀 빠른 시작
 
