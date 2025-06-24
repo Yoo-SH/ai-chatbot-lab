@@ -1,4 +1,4 @@
-# 🤖 ChatGPT 클론 서비스
+# [🤖 ChatGPT 클론 서비스](https://www.youtube.com/watch?v=Ntmlk_YXLhI)
 ![Image](https://github.com/user-attachments/assets/a538ccc1-7477-4618-9e7b-3fa0ae0051c9)
 
 ## `**프로젝트 소개**`
@@ -105,14 +105,25 @@ __사용자 전용 프롬프트 추가__<br>
 
 ## 🏗️ 시스템 아키텍처
 
-```mermaid
-graph TB
-    FE[Frontend (React)] --> BE[Backend (Spring Boot)]
-    BE --> AI[AI Service (FastAPI)]
-    AI --> GPT[OpenAI GPT-4 API]
-    BE --> DB[(PostgreSQL + Redis)]
-```
+graph LR
+    subgraph "🧠 GPT 클론코딩 연동 시스템 구성도"
+        FE[💻 Frontend - React]:::frontend
+        BE[🧩 Backend - Spring Boot]:::backend
+        AI[🧠 AI Service - FastAPI]:::ai
+        GPT[🤖 OpenAI GPT-4 API]:::gpt
+        DB[(💾 PostgreSQL + Redis)]:::db
+    end
 
+    FE --> BE
+    BE --> AI
+    AI --> GPT
+    BE --> DB
+
+    classDef frontend fill:#61dafb,stroke:#0288d1,stroke-width:2px,color:#000;
+    classDef backend fill:#6db33f,stroke:#388e3c,stroke-width:2px,color:#fff;
+    classDef ai fill:#ffa726,stroke:#ef6c00,stroke-width:2px,color:#fff;
+    classDef gpt fill:#e57373,stroke:#c62828,stroke-width:2px,color:#fff;
+    classDef db fill:#9575cd,stroke:#512da8,stroke-width:2px,color:#fff;
 
 
 ## 🚀 빠른 시작
