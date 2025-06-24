@@ -39,7 +39,7 @@ class OpenAIService:
             raise ValueError("OpenAI API 키가 필요합니다. 환경변수 OPENAI_API_KEY를 설정하거나 직접 전달하세요.")
         print(self.api_key)
         self.client = OpenAI(api_key=self.api_key)
-        self.conversation_history: List[Dict[str, str, str]] = [] # 예시, self.conversation_history = [   {"role": "user", "content": "안녕하세요?", timestamp = "2023-01-01T12:00:00"} ]
+        self.conversation_history: List[Dict[str, str]] = [] # 예시, self.conversation_history = [   {"role": "user", "content": "안녕하세요?", timestamp = "2023-01-01T12:00:00"} ]
         
         # 기본 설정 (환경변수에서 가져오거나 GENERAL_CHAT_CONFIG 사용)
         self.default_model = os.getenv('DEFAULT_MODEL', "gpt-3.5-turbo")
@@ -56,7 +56,7 @@ class OpenAIService:
         self.conversation_history.append(message)
         logger.info(f"메시지 추가: {role} - {content[:50]}...")
     
-    def get_conversation_history(self) -> List[Dict[str, str, str]]:
+    def get_conversation_history(self) -> List[Dict[str, str]]:
         """대화 기록 반환"""
         return self.conversation_history
     
