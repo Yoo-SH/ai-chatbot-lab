@@ -119,17 +119,7 @@ const Sidebar = ({ onNewChat, onSelectChat, selectedChatId, onClearEmptyConversa
       console.error('채팅 기록 로딩 오류:', err);
       setError(err.message);
       // 오류 발생 시 기본 데이터 사용
-      setChatHistory({
-        '오늘': [
-          { id: 1, title: 'ChatGPT 클론코딩 방법', time: '오늘' },
-          { id: 2, title: '라이브러리', time: '오늘' }
-        ],
-        '지난 7일': [
-          { id: 3, title: 'Prompt Enhancer', time: '지난 7일' },
-          { id: 4, title: 'SQL Expert (QueryGenie)', time: '지난 7일' },
-          { id: 5, title: 'GPT 단축', time: '지난 7일' }
-        ]
-      });
+      setChatHistory(FALLBACK_CHAT_HISTORY);
     } finally {
       setLoading(false);
     }
