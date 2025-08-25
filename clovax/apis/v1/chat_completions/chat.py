@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Path
 from schemas.chat import ChatRequest, ChatResponse
-from services.clova_service import ClovaService
+from services.clova_chat_service import ClovaService
 
 router = APIRouter()
 clova_service = ClovaService()
