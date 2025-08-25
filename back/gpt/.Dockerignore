@@ -1,0 +1,37 @@
+# Git
+.git
+.gitignore
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+
+# Build
+build/
+out/
+target/
+*.class
+*.jar
+*.war
+
+# Logs
+logs/
+*.log
+
+# Environment
+.env
+.env.*
+!env.example
+
+# Test
+test/
+coverage/
+
+# Misc
+.DS_Store
+node_modules/
+*.md
+!README.md
