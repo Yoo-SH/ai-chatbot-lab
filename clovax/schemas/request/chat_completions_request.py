@@ -1,6 +1,5 @@
 from pydantic import BaseModel, Field
 from typing import List, Union, Optional
-from fastapi import HTTPException
 
 class ImageUrl(BaseModel):
     """이미지 URL 정보"""
@@ -40,7 +39,7 @@ class ChatRequest(BaseModel):
     repetitionPenalty: Optional[float] = Field(1.1, description="반복 패널티")
     stop: Optional[List[str]] = Field([], description="중단 토큰 목록")
     seed: Optional[int] = Field(None, description="시드 값")
-    includeAiFilters: Optional[bool] = Field(False, description="AI 필터 포함 여부")
+    includeAiFilters: Optional[bool] = Field(True, description="AI 필터 포함 여부")
 
     model_config = {
         "json_schema_extra": {
@@ -77,68 +76,7 @@ class ChatRequest(BaseModel):
                 "temperature": 0.5,
                 "repetitionPenalty": 1.1,
                 "stop": []
+                
             }
         }
     }
-
-# CLOVA Studio 응답 스키마
-class Status(BaseModel):
-    """응답 상태"""
-    code: str = Field(..., description="응답 상태 코드")
-    message: str = Field(..., description="응답 상태 메시지")
-
-class Usage(BaseModel):
-    """토큰 사용량"""
-    completionTokens: int = Field(..., description="생성 토큰 수")
-    promptTokens: int = Field(..., description="입력(프롬프트) 토큰 수")
-    totalTokens: int = Field(..., description="전체 토큰 수")
-
-class ResponseMessage(BaseModel):
-    """응답 메시지"""
-    role: str = Field(..., description="메시지 역할 (assistant)")
-    content: str = Field(..., description="메시지 내용")
-
-class AIFilter(BaseModel):
-    """AI 필터 결과"""
-    groupName: str = Field(..., description="AI 필터 카테고리")
-    name: str = Field(..., description="AI 필터 세부 카테고리")
-    score: str = Field(..., description="AI 필터 점수")
-    result: Optional[str] = Field(None, description="AI 필터 정상 작동 여부")
-
-class Result(BaseModel):
-    """응답 결과"""
-    created: int = Field(..., description="응답 날짜 (Unix timestamp miliseconds)")
-    usage: Usage = Field(..., description="토큰 사용량")
-    message: ResponseMessage = Field(..., description="대화 메시지")
-    finishReason: str = Field(..., description="토큰 생성 중단 이유")
-    seed: int = Field(..., description="입력 seed 값")
-    aiFilter: Optional[List[AIFilter]] = Field(None, description="AI 필터 결과")
-
-class ChatResponse(BaseModel):
-    """채팅 응답"""
-    status: Status = Field(..., description="응답 상태")
-    result: Result = Field(..., description="응답 결과")
-
-# 스트리밍 응답 스키마
-class StreamTokenEvent(BaseModel):
-    """스트리밍 토큰 이벤트"""
-    created: int = Field(..., description="응답 시간 타임스탬프")
-    usage: Optional[Usage] = Field(None, description="토큰 사용량")
-    message: ResponseMessage = Field(..., description="대화 메시지")
-    finishReason: Optional[str] = Field(None, description="토큰 생성 중단 이유")
-
-class StreamResultEvent(BaseModel):
-    """스트리밍 결과 이벤트"""
-    created: int = Field(..., description="응답 시간 타임스탬프")
-    usage: Usage = Field(..., description="토큰 사용량")
-    message: ResponseMessage = Field(..., description="대화 메시지")
-    finishReason: str = Field(..., description="토큰 생성 중단 이유")
-    aiFilter: Optional[List[AIFilter]] = Field(None, description="AI 필터 결과")
-
-class ErrorEvent(BaseModel):
-    """에러 이벤트"""
-    status: Status = Field(..., description="응답 상태")
-
-class SignalEvent(BaseModel):
-    """시그널 이벤트"""
-    data: str = Field(..., description="전달할 시그널 데이터 정보")
