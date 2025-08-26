@@ -31,6 +31,9 @@ class ChatRequest(BaseModel):
     """채팅 요청"""
     messages: List[Message] = Field(..., description="메시지 목록")
     requestId: Optional[str] = Field(None, description="요청 ID")
+    sessionId: Optional[str] = Field(None, description="세션 ID (멀티턴 대화용)")
+    memoryType: Optional[str] = Field("buffer_window", description="메모리 타입 (buffer_window, token_buffer)")
+    memoryK: Optional[int] = Field(10, description="메모리 윈도우 크기")
     topP: Optional[float] = Field(0.8, description="Top-p 샘플링 값")
     topK: Optional[int] = Field(0, description="Top-k 샘플링 값")
     maxTokens: Optional[int] = Field(None, description="최대 토큰 수 (일반 모델용)")
