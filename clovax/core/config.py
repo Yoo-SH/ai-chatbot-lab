@@ -1,4 +1,4 @@
-from pydantic_settings import BaseSettings
+from pydantic import BaseModel
 from typing import Optional
 import os
 from dotenv import load_dotenv
@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-class Settings(BaseSettings):
+class Settings(BaseModel):
     # CLOVA Studio API 키 및 기본 URL
     CLOVA_STUDIO_API_KEY: str = os.getenv("CLOVA_STUDIO_API_KEY", "")
     CLOVA_STUDIO_BASE_URL: str = os.getenv("CLOVA_STUDIO_BASE_URL", "https://clovastudio.stream.ntruss.com")
