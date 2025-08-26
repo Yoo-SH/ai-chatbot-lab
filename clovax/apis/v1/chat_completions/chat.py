@@ -1,11 +1,18 @@
 from fastapi import APIRouter, HTTPException, Path
-from schemas.chat import ChatRequest, ChatResponse
+from schemas.request.chat_completions_request import ChatRequest
+from schemas.response.chat_completions_response import ChatResponse
 from services.clova_chat_service import ClovaService
 
 router = APIRouter()
 clova_service = ClovaService()
 
-@router.post("/{model_name}", tags=["chat-completions"])
+@router.post("/{model_name}", tags=["chat-completions"], response_model=ChatResponse, responses={
+    200: {
+        "description": "채팅 완성 응답",
+        "model": ChatResponse
+    }
+})
+
 async def chat_completion(
     chat_request: ChatRequest,
     model_name: str = Path(..., description="모델 이름 (예: HCX-005, HCX-DASH-002)")
