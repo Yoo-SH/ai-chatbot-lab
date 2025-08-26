@@ -31,10 +31,13 @@ class ChatMemoryService:
                 )
             elif memory_type == "token_buffer":
                 # 토큰 수 기준으로 대화 저장
+                if llm is None:
+                    llm = OpenAI()
                 memory = ConversationTokenBufferMemory(
                     max_token_limit=2000,
                     return_messages=True,
-                    memory_key="chat_history"
+                    memory_key="chat_history",
+                    llm=llm
                 )
             else:
                 # 기본값: buffer_window
