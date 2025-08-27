@@ -39,6 +39,7 @@ class ChatResponse(BaseModel):
     status: Status = Field(..., description="응답 상태")
     result: Result = Field(..., description="응답 결과")
     sessionId: Optional[str] = Field(None, description="세션 ID (멀티턴 대화용)")
+    ragUsed: Optional[bool] = Field(False, description="RAG 검색 사용 여부")
     
     model_config = {
         "json_schema_extra": {
@@ -81,10 +82,11 @@ class ChatResponse(BaseModel):
                         }
                     ]
                 },
-                "sessionId": "550e8400-e29b-41d4-a716-446655440000"
+                "sessionId": "550e8400-e29b-41d4-a716-446655440000",
+                "ragUsed": False
             }
         },
-        "field_order": ["status", "result", "sessionId"],  # 필드 순서 명시
+        "field_order": ["status", "result", "sessionId", "ragUsed"],  # 필드 순서 명시
         "populate_by_name": True
     }
 

@@ -4,6 +4,7 @@ from schemas.request.chat_completions_request import ChatRequest
 from schemas.response.chat_completions_response import ChatResponse
 from services.clova_chat_service import ClovaService
 from services.chat_memory_service import chat_memory_service
+from services.rag_retrieval_service import rag_retrieval_service, RetrievalConfig
 import uuid
 import json
 
@@ -50,6 +51,12 @@ async def streaming_chat_completion(
     - sessionId 없이 요청: 단일턴 (독립적인 대화)
     - sessionId와 함께 요청: 멀티턴 (이전 대화 기억)
     - 스트리밍 완료 시 sessionId가 포함되어 다음 요청에서 사용 가능
+    
+    **RAG (검색 증강 생성) 기능:**
+    - useRAG: true 설정 시 벡터 DB에서 관련 문서 검색
+    - ragTopK: 검색할 문서 개수 (기본값: 3, 범위: 1-10)
+    - ragThreshold: 유사도 임계값 (기본값: 0.1, 범위: 0.0-1.0)
+    - 검색된 문서를 바탕으로 정확한 답변을 스트리밍으로 제공
     
     **스트리밍 형식:**
     - Server-Sent Events (SSE) 형태로 응답
@@ -131,6 +138,42 @@ async def streaming_chat_completion(
                     "content": content_array
                 })
 
+        # RAG 검색 수행 (useRAG가 True인 경우)
+        rag_context = ""
+        if chat_request.useRAG:
+            # 사용자 메시지에서 검색 쿼리 추출
+            user_messages = [msg for msg in current_messages if msg.get("role") == "user"]
+            if user_messages:
+                last_user_message = user_messages[-1].get("content", "")
+                if isinstance(last_user_message, list):
+                    # 배열 형태의 content에서 텍스트만 추출
+                    text_parts = [
+                        item.get("text", "") 
+                        for item in last_user_message 
+                        if isinstance(item, dict) and item.get("type") == "text"
+                    ]
+                    query = " ".join(text_parts)
+                else:
+                    query = last_user_message
+                
+                # RAG 검색 수행
+                if query.strip():
+                    retrieval_config = RetrievalConfig(
+                        top_k=chat_request.ragTopK or 3,
+                        similarity_threshold=chat_request.ragThreshold or 0.1
+                    )
+                    
+                    search_results = await rag_retrieval_service.search_documents_async(
+                        query=query,
+                        config=retrieval_config
+                    )
+                    
+                    # 검색 결과를 컨텍스트로 변환
+                    if search_results:
+                        rag_context = rag_retrieval_service.create_context_from_results(
+                            search_results, max_length=2000
+                        )
+
         # 멀티턴 지원: 이전 대화 내역과 현재 메시지 결합
         if chat_request.sessionId:
             messages = chat_memory_service.get_messages_for_clovax(
@@ -141,6 +184,18 @@ async def streaming_chat_completion(
         else:
             # 세션 ID가 없으면 현재 메시지만 사용 (기존 방식)
             messages = current_messages
+            
+        # RAG 컨텍스트가 있으면 기존 시스템 메시지에 통합
+        if rag_context:
+            rag_instruction = f"""
+
+[참고 문서]
+{rag_context}
+
+위 참고 문서를 바탕으로 사용자의 질문에 답변해주세요. 참고 문서의 내용을 바탕으로 정확한 정보를 제공하고, 참고 문서에 없는 내용은 추측하지 마세요. 답변 끝에 "※ 제공된 문서를 바탕으로 작성된 답변입니다."를 추가하세요."""
+            
+            # 시스템 메시지에 RAG 컨텍스트 추가 (공통 함수 사용)
+            add_rag_context_to_system_message(messages, rag_instruction)
 
         # CLOVA Studio API 요청 데이터 준비 (JSON 직렬화 가능한 형태로 변환)
         clova_request = {
@@ -213,11 +268,12 @@ async def streaming_chat_completion(
                             memory_type=chat_request.memoryType or "buffer_window"
                         )
                 
-                # 스트리밍 완료 신호 (sessionId 포함)
+                # 스트리밍 완료 신호 (sessionId와 RAG 사용 여부 포함)
                 completion_data = {
                     "status": "streaming_completed", 
                     "message": "스트리밍 완료",
-                    "sessionId": session_id
+                    "sessionId": session_id,
+                    "ragUsed": bool(chat_request.useRAG and rag_context)
                 }
                 yield f"data: {json.dumps(completion_data, ensure_ascii=False)}\n\n"
                 
