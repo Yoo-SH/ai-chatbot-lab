@@ -194,29 +194,8 @@ async def streaming_chat_completion(
 
 위 참고 문서를 바탕으로 사용자의 질문에 답변해주세요. 참고 문서의 내용을 바탕으로 정확한 정보를 제공하고, 참고 문서에 없는 내용은 추측하지 마세요. 답변 끝에 "※ 제공된 문서를 바탕으로 작성된 답변입니다."를 추가하세요."""
             
-            # 기존 시스템 메시지를 찾아서 수정
-            system_message_found = False
-            for i, msg in enumerate(messages):
-                if msg.get("role") == "system":
-                    # 기존 시스템 메시지에 RAG 컨텍스트 추가
-                    if isinstance(msg["content"], str):
-                        messages[i]["content"] = msg["content"] + rag_instruction
-                    elif isinstance(msg["content"], list):
-                        # content가 배열인 경우 텍스트 부분에 추가
-                        for content_item in msg["content"]:
-                            if isinstance(content_item, dict) and content_item.get("type") == "text":
-                                content_item["text"] = content_item["text"] + rag_instruction
-                                break
-                    system_message_found = True
-                    break
-            
-            # 시스템 메시지가 없으면 새로 추가
-            if not system_message_found:
-                rag_system_message = {
-                    "role": "system",
-                    "content": f"친절하게 답변하는 AI 어시스턴트입니다.{rag_instruction}"
-                }
-                messages.insert(0, rag_system_message)
+            # 시스템 메시지에 RAG 컨텍스트 추가 (공통 함수 사용)
+            add_rag_context_to_system_message(messages, rag_instruction)
 
         # CLOVA Studio API 요청 데이터 준비 (JSON 직렬화 가능한 형태로 변환)
         clova_request = {
