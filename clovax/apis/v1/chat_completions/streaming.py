@@ -170,7 +170,7 @@ async def streaming_chat_completion(
                     
                     # 검색 결과를 컨텍스트로 변환
                     if search_results:
-                        rag_context = rag_retrieval_service._create_context_from_results(
+                        rag_context = rag_retrieval_service.create_context_from_results(
                             search_results, max_length=2000
                         )
 
