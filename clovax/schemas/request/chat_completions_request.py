@@ -43,6 +43,9 @@ class ChatRequest(BaseModel):
     stop: Optional[List[str]] = Field([], description="중단 토큰 목록")
     seed: Optional[int] = Field(None, description="시드 값")
     includeAiFilters: Optional[bool] = Field(True, description="AI 필터 포함 여부")
+    useRAG: Optional[bool] = Field(False, description="RAG 검색 사용 여부")
+    ragTopK: Optional[int] = Field(3, description="RAG 검색 결과 개수", ge=1, le=10)
+    ragThreshold: Optional[float] = Field(0.1, description="RAG 유사도 임계값", ge=0.0, le=1.0)
 
     model_config = {
         "json_schema_extra": {
@@ -78,7 +81,10 @@ class ChatRequest(BaseModel):
                 "maxTokens": 100,
                 "temperature": 0.5,
                 "repetitionPenalty": 1.1,
-                "stop": []
+                "stop": [],
+                "useRAG": True,
+                "ragTopK": 3,
+                "ragThreshold": 0.1
                 
             }
         }
