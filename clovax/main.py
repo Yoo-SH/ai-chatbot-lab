@@ -1,10 +1,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
+import logging
 from core.config import settings
 from apis.v1.chat_completions import router as chat_completions_router
 from apis.v1.tasks import router as tasks_router
 from apis.v1.models import router as models_router
+from apis.v1.rag import router as rag_router
+
+
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -24,8 +27,18 @@ app = FastAPI(
         {
             "name": "models",
             "description": "Available models information"
+        },
+        {
+            "name": "rag",
+            "description": "RAG Service API"
         }
     ]
+)
+
+
+logging.basicConfig(
+    level=getattr(logging, getattr(settings, "LOG_LEVEL", "INFO")),
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 
 # CORS 미들웨어 설정
@@ -41,6 +54,7 @@ app.add_middleware(
 app.include_router(chat_completions_router, prefix=settings.API_V1_STR)
 app.include_router(tasks_router, prefix=settings.API_V1_STR)
 app.include_router(models_router, prefix=settings.API_V1_STR)
+app.include_router(rag_router, prefix=settings.API_V1_STR)
 
 @app.get("/")
 async def root():
