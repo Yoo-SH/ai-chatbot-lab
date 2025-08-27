@@ -36,7 +36,10 @@ app = FastAPI(
 )
 
 
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    level=getattr(logging, getattr(settings, "LOG_LEVEL", "INFO")),
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
 
 # CORS 미들웨어 설정
 app.add_middleware(
