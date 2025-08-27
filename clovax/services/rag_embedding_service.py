@@ -107,10 +107,10 @@ class ClovaStudioEmbeddingService(Embeddings):
                     
             except Exception as e:
                 logger.error(f"문서 {i+1} 임베딩 실패: {str(e)}")
-                # 실패 시 0벡터 추가
-                embeddings.append([0.0] * self.embedding_dimension)
+                # 실패한 문서는 결과에서 제외됨
+                pass
         
-        logger.info(f"총 {len(embeddings)}개 문서 임베딩 완료")
+        logger.info(f"총 {len(embeddings)}개 문서 임베딩 완료 (요청: {len(texts)}개)")
         return embeddings
     
     async def aembed_query(self, text: str) -> List[float]:
